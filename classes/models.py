@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 
-class Assignments(models.Model):
+class Assignment(models.Model):
     assignment = models.CharField(max_length=20)
     url = models.URLField(max_length=200)
     start_data = models.DateTimeField(
@@ -14,7 +14,7 @@ class Assignments(models.Model):
         return self.assignment
 
 
-class Tests(models.Model):
+class Test(models.Model):
     test = models.CharField(max_length=20)
     url = models.URLField(max_length=200)
     start_data = models.DateTimeField(
@@ -33,9 +33,9 @@ class Classes(models.Model):
         settings.AUTH_USER_MODEL, blank=True, related_name="students")
     teachers = models.ForeignKey(
         settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name="teacher")
-    assignments = models.ManyToManyField(
-        Assignments, blank=True, related_name="assignments")
-    tests = models.ManyToManyField(Tests, blank=True, related_name="tests")
+    assignment = models.ManyToManyField(
+        Assignment, blank=True, related_name="assignments")
+    tests = models.ManyToManyField(Test, blank=True, related_name="tests")
 
     def __str__(self):
         return self.batch_code

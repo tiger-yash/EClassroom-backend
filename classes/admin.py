@@ -1,6 +1,6 @@
 from django.contrib import admin
-from classes.models import Classes,Tests,Assignments
+from classes.models import Classes,Test,Assignment
 # Register your models here.
 admin.site.register(Classes)
-admin.site.register(Assignments)
-admin.site.register(Tests)
+admin.site.register(Assignment)
+admin.site.register(Test)
