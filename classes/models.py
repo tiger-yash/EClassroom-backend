@@ -31,8 +31,8 @@ class Classes(models.Model):
     class_code = models.CharField(max_length=7, unique=True)
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="students")
-    teachers = models.OneToManyField(
-        settings.AUTH_USER_MODEL, blank=True, related_name="teacher")
+    teachers = models.ForeignKey(
+        settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name="teacher")
     assignments = models.ManyToManyField(
         Assignments, blank=True, related_name="assignments")
     tests = models.ManyToManyField(Tests, blank=True, related_name="tests")
