@@ -33,7 +33,10 @@ class LoginView(generics.GenericAPIView):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             token = create_auth_token(serializer.validated_data['user'])
-            return Response({'token': token.key }, status=status.HTTP_200_OK)
+            data=serializers.data;
+            data['token']=token.key;
+            
+            return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
