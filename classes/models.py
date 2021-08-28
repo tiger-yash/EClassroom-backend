@@ -8,7 +8,7 @@ class Assignment(models.Model):
     start_data = models.DateTimeField(
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
-    end_data = models.DateTimeField(blank=True)
+    end_date = models.DateTimeField(blank=True)
 
     def __str__(self):
         return self.assignment
@@ -20,27 +20,27 @@ class Test(models.Model):
     start_data = models.DateTimeField(
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
-    end_data = models.DateTimeField(blank=True)
+    end_date = models.DateTimeField(blank=True)
 
     def __str__(self):
         return self.test
 
 
 class Classes(models.Model):
-    subject_code = models.CharField(max_length=5)
-    class_code = models.CharField(max_length=7, unique=True)
+    subject = models.CharField(max_length=20,default='Subject')
+    class_code = models.CharField(max_length=7,blank=True, unique=True)
     students = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="students")
-    teachers = models.ForeignKey(
+    teacher = models.ForeignKey(
         settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name="teacher")
-    assignment = models.ManyToManyField(
+    assignments = models.ManyToManyField(
         Assignment, blank=True, related_name="assignments")
     tests = models.ManyToManyField(Test, blank=True, related_name="tests")
 
     def __str__(self):
-        return self.batch_code
+        return self.class_code
 
-    def add_assignement(self, assignment):
+    def add_assignment(self, assignment):
         if not assignment in self.assignments.all():
             self.assignments.add(assignment)
             self.save()
@@ -48,6 +48,16 @@ class Classes(models.Model):
     def add_test(self, test):
         if not test in self.tests.all():
             self.tests.add(test)
+            self.save()
+
+    def remove_assignment(self,assignment):
+        if assignment in self.assignments.all():
+            self.assignments.remove(assignment)
+            self.save()
+    
+    def remove_test(self,test):
+        if test in self.tests.all():
+            self.tests.remove(test)
             self.save()
 
     def add_student(self,student):
