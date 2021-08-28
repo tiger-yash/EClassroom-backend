@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.conf import settings
-
+from classes.models import Classes
 
 class MyAccountManager(BaseUserManager):
     def create_user(self, email, username, is_teacher, is_student, password=None):
@@ -47,6 +47,8 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     is_student = models.BooleanField(default=True)
     is_teacher = models.BooleanField(default=False)
+    classes = models.ManyToManyField(
+        Classes, blank=True, related_name="classes")
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -62,7 +64,16 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
+    
+    def add_class(self,ts_class):
+        if not ts_class in self.classes.all():
+            self.classes.add(ts_class)
+            self.save()
+    
+    def remove_class(self, ts_class):
+        if ts_class in self.classes.all():
+            self.classes.remove(ts_class)
+            self.save()
 
 class GoogleAuth(models.Model):
     user = models.OneToOneField(
