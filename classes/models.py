@@ -45,7 +45,12 @@ class Classes(models.Model):
             self.assignments.add(assignment)
             self.save()
 
-    def add_tests(self, test):
+    def add_test(self, test):
         if not test in self.tests.all():
             self.tests.add(test)
+            self.save()
+
+    def add_student(self,student):
+        if not student in self.students.all():
+            self.students.add(student)
             self.save()
