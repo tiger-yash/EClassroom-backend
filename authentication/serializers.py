@@ -41,11 +41,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
-    username = serializers.CharField()
+    username = serializers.CharField(default=None)
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, default=None)
     mode = serializers.CharField(max_length=6,default="local")
-    g_token = serializers.CharField(default=None,)
+    g_token = serializers.CharField(default=None)
 
     class Meta:
         model = Account
@@ -58,6 +58,7 @@ class LoginSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
+    
         if data.get('mode')=="local":
             username = data.get('username')
             password = data.get('password')
@@ -68,6 +69,7 @@ class LoginSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Unable to login :( !")
             return data
         else:
+    
             try:
                 user=GoogleAuth.objects.get(g_token=data.get('g_token')).user
                 data['user'] = user

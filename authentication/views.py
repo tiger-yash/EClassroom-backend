@@ -35,7 +35,7 @@ class LoginView(generics.GenericAPIView):
             token = create_auth_token(serializer.validated_data['user'])
             data=serializer.data;
             data['token']=token.key;
-            
+            data['username']=serializer.validated_data['user'].username
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
