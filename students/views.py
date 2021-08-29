@@ -108,3 +108,21 @@ class TestsSubmissionView(generics.GenericAPIView):
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CalendarView(generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        student=Account.objects.get(id=request.user.id)
+        data={}
+        arr1=[]
+        arr2=[]
+        for ts_class in student.classes.all():
+            for test in ts_class.tests.all():
+                arr1.append({'test':test.test,'due_date':test.due_date,'subject':ts_class.subject,'id':test.id})
+            for assignment in ts_class.assignments.all():
+                arr2.append({'assignment':assignment.assignment,'due_date':assignment.due_date,'subject':ts_class.subject,'id':assignment.id})
+        data['tests']=arr1
+        data['assignments']=arr2
+        return Response(data, status=status.HTTP_200_OK)
