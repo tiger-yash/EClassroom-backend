@@ -36,6 +36,11 @@ class LoginView(generics.GenericAPIView):
             data=serializer.data;
             data['token']=token.key;
             data['username']=serializer.validated_data['user'].username
+            classes=Account.objects.get(username=data['username']).classes.all()
+            arr=[]
+            for x in classes:
+                arr.append({'id':x.id,'subject':x.subject,'class_code':x.class_code})
+            data['classes']=arr
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
