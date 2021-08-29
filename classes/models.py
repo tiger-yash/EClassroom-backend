@@ -5,7 +5,7 @@ from django.conf import settings
 class Assignment(models.Model):
     assignment = models.CharField(max_length=20)
     url = models.URLField(max_length=200)
-    start_data = models.DateTimeField(
+    start_date = models.DateTimeField(
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
     end_date = models.DateTimeField(blank=True)
@@ -17,7 +17,7 @@ class Assignment(models.Model):
 class Test(models.Model):
     test = models.CharField(max_length=20)
     url = models.URLField(max_length=200)
-    start_data = models.DateTimeField(
+    start_date = models.DateTimeField(
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
     end_date = models.DateTimeField(blank=True)
@@ -63,4 +63,9 @@ class Classes(models.Model):
     def add_student(self,student):
         if not student in self.students.all():
             self.students.add(student)
+            self.save()
+
+    def remove_student(self,student):
+        if student in self.students.all():
+            self.students.remove(student)
             self.save()

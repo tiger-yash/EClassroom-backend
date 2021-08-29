@@ -26,7 +26,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
     class_code=serializers.CharField(max_length=7)
     class Meta:
         model = Assignment
-        fields = ('id', 'assignment','due_date','end_date','url')
+        fields = ('id', 'assignment','due_date','end_date','url','class_code')
         extra_kwargs = {
             'end_date':{'required':False},
             'due_date':{'required':False}
@@ -37,10 +37,10 @@ class TestSerializer(serializers.ModelSerializer):
     url = serializers.URLField(max_length=200)
     due_date=serializers.DateTimeField()
     end_date=serializers.DateTimeField()
-
+    class_code=serializers.CharField(max_length=7)
     class Meta:
         model = Test
-        fields = ('id', 'test','due_date','end_date','url')
+        fields = ('id', 'test','due_date','end_date','url','class_code')
         extra_kwargs = {
             'end_date':{'required':False},
             'due_date':{'required':False}
