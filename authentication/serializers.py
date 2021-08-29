@@ -45,7 +45,17 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         style={'input_type': 'password'}, write_only=True, default=None)
     mode = serializers.CharField(max_length=6,default="local")
-    g_token = serializers.CharField(max_length=100)
+    g_token = serializers.CharField(default=None,)
+
+    class Meta:
+        model = Account
+        fields = ('id', 'username','mode','g_token','password')
+        extra_kwargs = {
+            'password': {'write_only': True,'required':False},
+            'id':  {'required': False, 'read_only': True},
+            'g_token':{'write_only': True,'required':False,},
+            'username':{'required':False}
+        }
 
     def validate(self, data):
         if data.get('mode')=="local":
@@ -68,14 +78,7 @@ class LoginSerializer(serializers.ModelSerializer):
                 
             
 
-    class Meta:
-        model = Account
-        fields = ('id', 'username','mode','g_token','password')
-        extra_kwargs = {
-            'password': {'write_only': True,'required':False},
-            'id':  {'required': False, 'read_only': True},
-            'g_token':{'required':False,'write_only': True,}
-        }
+    
 
 
 class UserSerializer(serializers.ModelSerializer):
