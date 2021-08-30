@@ -25,7 +25,7 @@ SECRET_KEY = '(y98at83+aeo!%&&8a%8^n-go#i337p3k57rj)6nvzu52kv8hh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 AUTH_USER_MODEL = 'authentication.Account'
 # Application definition
@@ -137,6 +137,9 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles/')
+LOGIN_REDIRECT_URL='/'
+LOGOUT_REDIRECT_URL = '/'
 
 #Swagger
 SWAGGER_SETTINGS = {
