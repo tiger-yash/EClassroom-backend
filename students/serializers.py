@@ -12,7 +12,7 @@ class ClassesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classes
-        fields = ('id', 'class_code', 'students')
+        fields = ('id', 'class_code')
         extra_kwargs = {
             'students':{'required':False},
         }
@@ -36,6 +36,6 @@ class TestsSerializer(serializers.ModelSerializer):
         
 
 class MarksSerializer(serializers.ModelSerializer):
-    marks=serializers.DecimalField()
+    marks=serializers.DecimalField(max_digits=3,decimal_places=2)
     username=serializers.CharField(max_length=30)
     type=serializers.CharField(max_length=10)

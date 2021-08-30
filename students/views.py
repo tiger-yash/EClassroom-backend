@@ -70,7 +70,11 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
         else:
             arr=[]
             for sub in AssignmentsSubmission.objects.filter(assignment=ass):
-                arr.append({'student':sub.student.username,'usl':sub.url,'submission_date':sub.submission_date})
+                if sub.marks:
+                    marks=sub.marks
+                else:
+                    marks=None
+                arr.append({'student':sub.student.username,'url':sub.url,'submission_date':sub.submission_date,'marks':marks})
             data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
 
@@ -119,7 +123,11 @@ class TestsSubmissionView(generics.GenericAPIView):
         else:
             arr=[]
             for sub in TestsSubmission.objects.filter(test=test):
-                arr.append({'student':sub.student.username,'usl':sub.url,'submission_date':sub.submission_date})
+                if sub.marks:
+                    marks=sub.marks
+                else:
+                    marks=None
+                arr.append({'student':sub.student.username,'url':sub.url,'submission_date':sub.submission_date,'marks':marks})
             data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
 
