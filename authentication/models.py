@@ -4,7 +4,7 @@ from django.conf import settings
 from classes.models import Classes
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, is_teacher, is_student, password=None):
+    def create_user(self, email, username, is_teacher=False, is_student=True, password=None):
         if not email:
             raise ValueError('Users must have an email address')
         if not username:
