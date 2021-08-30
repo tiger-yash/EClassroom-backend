@@ -49,7 +49,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id', 'username','mode','g_token','password')
+        fields = ('id', 'username','mode','g_token','password','is_teacher','is_student')
         extra_kwargs = {
             'password': {'write_only': True,'required':False},
             'id':  {'required': False, 'read_only': True},
@@ -76,14 +76,8 @@ class LoginSerializer(serializers.ModelSerializer):
                 return data
             except:
                 raise serializers.ValidationError("Unable to login :( !")
-            
-                
-            
-
-    
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'email', 'username')
+        fields = ('id', 'email', 'username','is_teacher','is_student')
