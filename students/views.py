@@ -56,6 +56,15 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
         data['url']=ass.url
         data['due_date']=ass.due_date
         data['end_date']=ass.end_date
+        if request.user.is_student:
+            try:
+                student=Account.objects.get(id=request.user.id)
+                sub=AssignmentsSubmission.objects.get(student=student,assignment=ass)
+                data['submitted']=True
+                data['submitted_url']=sub.url
+                data['submission_date']=sub.submission_date
+            except:
+                data['submitted']=False
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self,request,pk):
@@ -88,6 +97,15 @@ class TestsSubmissionView(generics.GenericAPIView):
         data['url']=test.url
         data['due_date']=test.due_date
         data['end_date']=test.end_date
+        if request.user.is_student:
+            try:
+                student=Account.objects.get(id=request.user.id)
+                sub=TestsSubmission.objects.get(student=student,test=test)
+                data['submitted']=True
+                data['submitted_url']=sub.url
+                data['submission_date']=sub.submission_date
+            except:
+                data['submitted']=False
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self,request,pk):
