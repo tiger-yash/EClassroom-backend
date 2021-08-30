@@ -97,19 +97,28 @@ class AssignmentView(generics.GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
-        serializer = AssignmentSerializer(Assignment.objects.get(
-            id=request.data['id']), data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        user=Account.objects.get(id=request.user.id)
+        assignment=Assignment.objects.get(id=request.data['id'])
+        if assignment.teacher==user:
+            serializer = AssignmentSerializer(Assignment.objects.get(
+                id=request.data['id']), data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"You do not have permission."},status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request):
+        user=Account.objects.get(id=request.user.id)
         assignment=Assignment.objects.get(id=request.data['id'])
-        ts_class=Classes.objects.get(class_code=request.data['class_code'])
-        ts_class.remove_assignment(assignment)
-        assignment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if assignment.teacher==user:
+            ts_class=Classes.objects.get(class_code=request.data['class_code'])
+            ts_class.remove_assignment(assignment)
+            assignment.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error":"You do not have permission."},status=status.HTTP_400_BAD_REQUEST)
 
 class TestView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
@@ -138,16 +147,25 @@ class TestView(generics.GenericAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
-        serializer = TestSerializer(Test.objects.get(
-            id=request.data['id']), data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        user=Account.objects.get(id=request.user.id)
+        test=Test.objects.get(id=request.data['id'])
+        if test.teacher==user:
+            serializer = TestSerializer(Test.objects.get(
+                id=request.data['id']), data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"You do not have permission."},status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request):
+        user=Account.objects.get(id=request.user.id)
         test=Test.objects.get(id=request.data['id'])
-        ts_class=Classes.objects.get(class_code=request.data['class_code'])
-        ts_class.remove_test(test)
-        test.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if test.teacher==user:
+            ts_class=Classes.objects.get(class_code=request.data['class_code'])
+            ts_class.remove_test(test)
+            test.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"error":"You do not have permission."},status=status.HTTP_400_BAD_REQUEST)
