@@ -9,7 +9,7 @@ class Assignment(models.Model):
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
     end_date = models.DateTimeField(blank=True)
-
+    max_marks = models.DecimalField(blank=True)
     def __str__(self):
         return self.assignment
 
@@ -21,7 +21,7 @@ class Test(models.Model):
         verbose_name='date created', auto_now_add=True)
     due_date = models.DateTimeField(blank=True)
     end_date = models.DateTimeField(blank=True)
-
+    max_marks = models.DecimalField(blank=True)
     def __str__(self):
         return self.test
 

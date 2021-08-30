@@ -87,7 +87,7 @@ class AssignmentView(generics.GenericAPIView):
         if serializer.is_valid():
             data = request.data
             assignment = Assignment.objects.create(assignment=data['assignment'], url=data['url'], due_date=data[
-                                                   'due_date'], end_date=data['end_date'])
+                                                   'due_date'], end_date=data['end_date'],max_marks=data["max_marks"])
             ts_class=Classes.objects.get(class_code=data['class_code'])
             ts_class.add_assignment(assignment)
             data = serializer.data
@@ -137,7 +137,7 @@ class TestView(generics.GenericAPIView):
         if serializer.is_valid():
             data = request.data
             test = Test.objects.create(test=data['test'], url=data['url'], due_date=data[
-                                                   'due_date'], end_date=data['end_date'])
+                                                   'due_date'], end_date=data['end_date'],max_marks=data["max_marks"])
             ts_class=Classes.objects.get(class_code=data['class_code'])
             ts_class.add_test(test)
             data = serializer.data
