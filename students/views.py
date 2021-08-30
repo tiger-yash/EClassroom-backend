@@ -1,10 +1,11 @@
+import re
 from rest_framework import serializers, status
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import (
-    ClassesSerializer, AssignmentsSerializer, TestsSerializer)
+    ClassesSerializer, AssignmentsSerializer, TestsSerializer,MarksSerializer)
 from authentication.models import Account
 from classes.models import Assignment, Classes,Test
 from students.models import AssignmentsSubmission, TestsSubmission
@@ -56,6 +57,7 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
         data['url']=ass.url
         data['due_date']=ass.due_date
         data['end_date']=ass.end_date
+        data['max_marks']=ass.max_marks
         if request.user.is_student:
             try:
                 student=Account.objects.get(id=request.user.id)
@@ -65,6 +67,11 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
                 data['submission_date']=sub.submission_date
             except:
                 data['submitted']=False
+        else:
+            arr=[]
+            for sub in AssignmentsSubmission.objects.filter(assignment=ass):
+                arr.append({'student':sub.student.username,'usl':sub.url,'submission_date':sub.submission_date})
+            data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self,request,pk):
@@ -97,6 +104,7 @@ class TestsSubmissionView(generics.GenericAPIView):
         data['url']=test.url
         data['due_date']=test.due_date
         data['end_date']=test.end_date
+        data['max_marks']=test.max_marks
         if request.user.is_student:
             try:
                 student=Account.objects.get(id=request.user.id)
@@ -104,8 +112,15 @@ class TestsSubmissionView(generics.GenericAPIView):
                 data['submitted']=True
                 data['submitted_url']=sub.url
                 data['submission_date']=sub.submission_date
+                if sub.marks:
+                    data['marks']=sub.marks
             except:
                 data['submitted']=False
+        else:
+            arr=[]
+            for sub in TestsSubmission.objects.filter(test=test):
+                arr.append({'student':sub.student.username,'usl':sub.url,'submission_date':sub.submission_date})
+            data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self,request,pk):
@@ -144,3 +159,28 @@ class CalendarView(generics.GenericAPIView):
         data['tests']=arr1
         data['assignments']=arr2
         return Response(data, status=status.HTTP_200_OK)
+
+class MarksView(generics.GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = MarksSerializer
+    def post(self,request,pk):
+        serializer =MarksSerializer(data=request.data)
+        if serializer.is_valid():
+            marks=serializer.validated_data['marks']
+            username=serializer.validated_data['username']
+            student=Account.objects.get(username=username)
+            if serializer.validated_data['type']=="test":
+                test=Test.objects.get(id=pk)
+                sub=TestsSubmission.objects.get(student=student,test=test)
+                sub.marks=serializer.validated_data['marks']
+                sub.save()
+            else:
+                ass=Assignment.objects.get(id=pk)
+                sub=AssignmentsSubmission.objects.get(student=student,assignment=ass)
+                sub.marks=serializer.validated_data['marks']
+                sub.save()
+            data=serializer.data
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
