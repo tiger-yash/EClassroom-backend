@@ -49,7 +49,7 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = AssignmentsSerializer
-
+    queryset=Assignment.objects.all()
     def get(self,request,pk):
         ass=Assignment.objects.get(id=pk)
         data={}
@@ -100,7 +100,7 @@ class TestsSubmissionView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = TestsSerializer
-
+    queryset=Test.objects.all()
     def get(self,request,pk):
         test=Test.objects.get(id=pk)
         data={}
@@ -153,7 +153,7 @@ class TestsSubmissionView(generics.GenericAPIView):
 class CalendarView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
+    serializer_class=ClassesSerializer
     def get(self,request):
         student=Account.objects.get(id=request.user.id)
         data={}
@@ -172,6 +172,7 @@ class MarksView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = MarksSerializer
+    queryset=Classes.objects.all()
     def post(self,request,pk):
         serializer =MarksSerializer(data=request.data)
         if serializer.is_valid():

@@ -53,7 +53,7 @@ class ClassView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = ClassSerializer
-
+    queryset=Classes.objects.all()
     def get(self,request,pk):
         serializer = ClassSerializer(Classes.objects.get(id=pk))
         data=serializer.data

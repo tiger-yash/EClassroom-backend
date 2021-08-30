@@ -35,7 +35,8 @@ class TestsSerializer(serializers.ModelSerializer):
         fields = ('id','url')
         
 
-class MarksSerializer(serializers.ModelSerializer):
+class MarksSerializer(serializers.Serializer):
     marks=serializers.DecimalField(max_digits=3,decimal_places=2)
     username=serializers.CharField(max_length=30)
     type=serializers.CharField(max_length=10)
+
