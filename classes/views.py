@@ -11,7 +11,7 @@ import string
 import secrets
 
 
-class ClassView(generics.GenericAPIView):
+class AllClassesView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = ClassSerializer
@@ -21,7 +21,7 @@ class ClassView(generics.GenericAPIView):
         
         arr=[]
         for x in classes:
-            arr.append({'id':x.id,'subject':x.subject,'class_code':x.class_code})
+            arr.append({'id':x.id,'subject':x.subject,'class_code':x.class_code,'teacher':x.teacher.username})
         return Response({'classes':arr}, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -49,7 +49,7 @@ class ClassView(generics.GenericAPIView):
         ts_class.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class AllClassesView(generics.GenericAPIView):
+class ClassView(generics.GenericAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = ClassSerializer
@@ -58,6 +58,7 @@ class AllClassesView(generics.GenericAPIView):
         serializer = ClassSerializer(Classes.objects.get(id=pk))
         data=serializer.data
         data['teacher']=Classes.objects.get(id=pk).teacher.username
+        data['teacher_email']=Classes.objects.get(id=pk).teacher.email
         data['class_code']=Classes.objects.get(id=pk).class_code
         arr=[]
         for x in Classes.objects.get(id=pk).students.all():
