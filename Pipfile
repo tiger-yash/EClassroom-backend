@@ -9,6 +9,9 @@ django-rest-framework = "*"
 django-rest-swagger = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
+gunicorn = "*"
+django-heroku = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
