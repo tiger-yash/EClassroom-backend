@@ -65,15 +65,19 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
                 data['submitted']=True
                 data['submitted_url']=sub.url
                 data['submission_date']=sub.submission_date
+                if sub.marks<0:
+                    data['marks']=None
+                else:
+                    data['marks']=sub.marks
             except:
                 data['submitted']=False
         else:
             arr=[]
             for sub in AssignmentsSubmission.objects.filter(assignment=ass):
-                if sub.marks:
-                    marks=sub.marks
-                else:
+                if sub.marks<0:
                     marks=None
+                else:
+                    marks=sub.marks
                 arr.append({'student':sub.student.username,'url':sub.url,'submission_date':sub.submission_date,'marks':marks})
             data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
@@ -81,15 +85,13 @@ class AssignmentsSubmissionView(generics.GenericAPIView):
     def post(self,request,pk):
         serializer = AssignmentsSerializer(data=request.data)
         if serializer.is_valid():
+            assignment=Assignment.objects.get(id=pk)
+            student=Account.objects.get(id=request.user.id)
             try:
-                assignment=Assignment.objects.get(id=pk)
-                student=Account.objects.get(id=request.user.id)
                 submission=AssignmentsSubmission.objects.get(assignment=assignment,student=student)
                 submission.url=request.data['url']
                 submission.save()
             except:
-                assignment=Assignment.objects.get(id=pk)
-                student=Account.objects.get(id=request.user.id)
                 submission=AssignmentsSubmission.objects.create(assignment=assignment,student=student,url=request.data['url'])
             data=serializer.data
             return Response(data, status=status.HTTP_200_OK)
@@ -116,17 +118,19 @@ class TestsSubmissionView(generics.GenericAPIView):
                 data['submitted']=True
                 data['submitted_url']=sub.url
                 data['submission_date']=sub.submission_date
-                if sub.marks:
+                if sub.marks<0:
+                    data['marks']=None
+                else:
                     data['marks']=sub.marks
             except:
                 data['submitted']=False
         else:
             arr=[]
             for sub in TestsSubmission.objects.filter(test=test):
-                if sub.marks:
-                    marks=sub.marks
-                else:
+                if sub.marks<0:
                     marks=None
+                else:
+                    marks=sub.marks
                 arr.append({'student':sub.student.username,'url':sub.url,'submission_date':sub.submission_date,'marks':marks})
             data['submissions']=arr
         return Response(data, status=status.HTTP_200_OK)
@@ -134,18 +138,17 @@ class TestsSubmissionView(generics.GenericAPIView):
     def post(self,request,pk):
         serializer =TestsSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                test=Test.objects.get(id=pk)
-                student=Account.objects.get(id=request.user.id)
+            test=Test.objects.get(id=pk)
+            student=Account.objects.get(id=request.user.id)
+            try:  
                 submission=TestsSubmission.objects.get(test=test,student=student)
                 submission.url=request.data['url']
                 submission.save()
             except:
-                test=Test.objects.get(id=pk)
-                student=Account.objects.get(id=request.user.id)
-                submission=AssignmentsSubmission.objects.create(test=test,student=student,url=request.data['url'])
+                submission=TestsSubmission.objects.create(test=test,student=student,url=request.data['url'])
             data=serializer.data
             data['submission_date']=submission.submission_date
+
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

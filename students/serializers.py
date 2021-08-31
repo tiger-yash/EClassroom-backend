@@ -1,4 +1,5 @@
 from re import T
+from students.models import AssignmentsSubmission, TestsSubmission
 from rest_framework import serializers
 from authentication.models import Account
 from classes.models import Classes,Assignment,Test
@@ -22,7 +23,7 @@ class AssignmentsSerializer(serializers.ModelSerializer):
     url = serializers.URLField(max_length=200)
 
     class Meta:
-        model = Assignment
+        model = AssignmentsSubmission
         fields = ('id','url')
         
 
@@ -31,7 +32,7 @@ class TestsSerializer(serializers.ModelSerializer):
     url = serializers.URLField(max_length=200)
 
     class Meta:
-        model = Test
+        model = TestsSubmission
         fields = ('id','url')
         
 
