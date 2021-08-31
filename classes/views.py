@@ -98,8 +98,8 @@ class AssignmentView(generics.GenericAPIView):
 
     def put(self, request):
         user=Account.objects.get(id=request.user.id)
-        assignment=Assignment.objects.get(id=request.data['id'])
-        if assignment.teacher==user:
+        ts_class=Classes.objects.get(class_code=request.data['class_code'])
+        if ts_class.teacher==user:
             serializer = AssignmentSerializer(Assignment.objects.get(
                 id=request.data['id']), data=request.data)
             if serializer.is_valid():
@@ -112,7 +112,8 @@ class AssignmentView(generics.GenericAPIView):
     def delete(self,request):
         user=Account.objects.get(id=request.user.id)
         assignment=Assignment.objects.get(id=request.data['id'])
-        if assignment.teacher==user:
+        ts_class=Classes.objects.get(class_code=request.data['class_code'])
+        if ts_class.teacher==user:
             ts_class=Classes.objects.get(class_code=request.data['class_code'])
             ts_class.remove_assignment(assignment)
             assignment.delete()
@@ -149,8 +150,8 @@ class TestView(generics.GenericAPIView):
 
     def put(self, request):
         user=Account.objects.get(id=request.user.id)
-        test=Test.objects.get(id=request.data['id'])
-        if test.teacher==user:
+        ts_class=Classes.objects.get(class_code=request.data['class_code'])
+        if ts_class.teacher==user:
             serializer = TestSerializer(Test.objects.get(
                 id=request.data['id']), data=request.data)
             if serializer.is_valid():
@@ -163,7 +164,8 @@ class TestView(generics.GenericAPIView):
     def delete(self,request):
         user=Account.objects.get(id=request.user.id)
         test=Test.objects.get(id=request.data['id'])
-        if test.teacher==user:
+        ts_class=Classes.objects.get(class_code=request.data['class_code'])
+        if ts_class.teacher==user:
             ts_class=Classes.objects.get(class_code=request.data['class_code'])
             ts_class.remove_test(test)
             test.delete()
