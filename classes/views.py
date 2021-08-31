@@ -81,7 +81,7 @@ class AssignmentView(generics.GenericAPIView):
         arr=[]
         for ass in assignments:
             arr.append({'assignment':ass.assignment,'id':ass.id})
-            return Response({'assignments':arr}, status=status.HTTP_200_OK)
+        return Response({'assignments':arr}, status=status.HTTP_200_OK)
     def post(self, request):
         serializer = AssignmentSerializer(data=request.data)
         if serializer.is_valid():
@@ -130,7 +130,8 @@ class TestView(generics.GenericAPIView):
         arr=[]
         for test in tests:
             arr.append({'test':test.test,'id':test.id})
-            return Response({'tests':arr}, status=status.HTTP_200_OK)
+        return Response({'tests':arr}, status=status.HTTP_200_OK)
+
 
     def post(self, request):
         serializer = TestSerializer(data=request.data)
