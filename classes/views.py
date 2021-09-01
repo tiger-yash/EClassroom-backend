@@ -77,7 +77,7 @@ class AssignmentView(generics.GenericAPIView):
     serializer_class = AssignmentSerializer
 
     def get(self,request):
-        assignments=Classes.objects.get(class_code=request.data['class_code']).assignments.all()
+        assignments=Classes.objects.get(class_code=request.GET['class_code']).assignments.all()
         arr=[]
         for ass in assignments:
             arr.append({'assignment':ass.assignment,'id':ass.id})
@@ -127,7 +127,7 @@ class TestView(generics.GenericAPIView):
     serializer_class = TestSerializer
 
     def get(self,request):
-        tests=Classes.objects.get(class_code=request.data['class_code']).tests.all()
+        tests=Classes.objects.get(class_code=request.GET['class_code']).tests.all()
         arr=[]
         for test in tests:
             arr.append({'test':test.test,'id':test.id})
