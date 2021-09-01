@@ -9,7 +9,7 @@ class AssignmentsSubmission(models.Model):
         Assignment,on_delete=models.CASCADE, related_name="assign")
     submission_date=models.DateTimeField(auto_now=True)
     url=models.URLField(max_length=200)
-    marks=models.DecimalField(blank=True,max_digits=3,decimal_places=2,default=None)
+    marks=models.DecimalField(blank=True,max_digits=3,decimal_places=2,default=-1)
     def __str__(self):
         return self.assignment
 
@@ -20,6 +20,6 @@ class TestsSubmission(models.Model):
         Test,on_delete=models.CASCADE, related_name="quiz")
     submission_date=models.DateTimeField(auto_now=True)
     url=models.URLField(max_length=200)
-    marks=models.DecimalField(blank=True,max_digits=3,decimal_places=2,default=None)
+    marks=models.DecimalField(default=-1,blank=True,max_digits=3,decimal_places=2)
     def __str__(self):
         return self.test
