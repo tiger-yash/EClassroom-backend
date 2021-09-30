@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(y98at83+aeo!%&&8a%8^n-go#i337p3k57rj)6nvzu52kv8hh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['https://eclassroom-apis.herokuapp.com/','127.0.0.1','localhost']
 

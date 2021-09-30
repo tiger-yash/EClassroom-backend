@@ -80,7 +80,7 @@ class AssignmentView(generics.GenericAPIView):
         assignments=Classes.objects.get(class_code=request.GET['class_code']).assignments.all()
         arr=[]
         for ass in assignments:
-            arr.append({'assignment':ass.assignment,'id':ass.id})
+            arr.append({'assignment':ass.assignment,'id':ass.id,})
         return Response({'assignments':arr}, status=status.HTTP_200_OK)
     def post(self, request):
         serializer = AssignmentSerializer(data=request.data)
